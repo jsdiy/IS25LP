@@ -1,54 +1,53 @@
-//	IS25LP040E - SPI/QPI SERIAL FLASH MEMORY	Šî–{ƒ‰ƒCƒuƒ‰ƒŠ
-//	w’‹–é‹t“]xHìº	https://github.com/jsdiy
+//	IS25LP040E - SPI/QPI SERIAL FLASH MEMORY	åŸºæœ¬ãƒ©ã‚¤ãƒ–ãƒ©ãƒª
+//	ã€æ˜¼å¤œé€†è»¢ã€å·¥ä½œå®¤	https://github.com/jsdiy
 //	2025/05	@jsdiy
 
 /*
-yƒ|[ƒg‘Î‰z	ATmega328P/IS25LP040E
+ã€ãƒãƒ¼ãƒˆå¯¾å¿œã€‘	ATmega328P/IS25LP040E
 bit		7	6	5	4	 3	  2		1	0
 portB	-	-	SCK	MISO MOSI -		-	-
 				:	:	 :	  :
-IS25LP040E		SCK	SO	 SI	  CS#			¦WP#,HOLD#‚ÍVCC‚ÖÚ‘±‚·‚éB
+IS25LP040E		SCK	SO	 SI	  CS#			â€»WP#,HOLD#ã¯VCCã¸æ¥ç¶šã™ã‚‹ã€‚
 
-yATmega328Pz
+ã€ATmega328Pã€‘
 |543210---54321|
 |CCCCCCGRVBBBBB|	R=Vref
 >              |
 |CDDDDDVGBBDDDB|
 |601234--675670|
 
-yƒrƒ‹ƒhŠÂ‹«z
+ã€ãƒ“ãƒ«ãƒ‰ç’°å¢ƒã€‘
 Microchip Studio 7 (Version: 7.0.2594 - )
 */
 
 #include <avr/io.h>
-#include <util/delay.h>
 #include "IS25LPlib.h"
 #include "spilib.h"
 
-//ƒoƒbƒtƒ@
+//ãƒãƒƒãƒ•ã‚¡
 #define BUFSIZE	2000
 static	uint8_t	buf[BUFSIZE];
 
 int	main(void)
 {
-	//‰Šú‰»
+	//åˆæœŸåŒ–
 	SPI_MasterInit();
 	FMEM_Initialize();
 
-	//’ÊMƒeƒXƒg
-	//EIS25LP040E‚Ìê‡‚Í0x9D12‚ª•Ô‚Á‚Ä‚­‚éB
+	//é€šä¿¡ãƒ†ã‚¹ãƒˆ
+	//ãƒ»IS25LP040Eã®å ´åˆã¯0x9D12ãŒè¿”ã£ã¦ãã‚‹ã€‚
 	uint16_t mid = FMEM_ManufacturerId();
 	//LCD_PutHexNumber(mid);
 
-	//‚±‚ê‚©‚ç‘‚«‚à‚¤‚Æ‚·‚é—Ìˆæ‚ğÁ‹
-	//E•K—vÅ¬ŒÀ‚ğw’è‚·‚ê‚Î‚æ‚¢‚ªA—á‚Æ‚µ‚Ä64KBƒuƒƒbƒN‚Åw’è‚µ‚Ä‚¢‚éB
+	//ã“ã‚Œã‹ã‚‰æ›¸ãè¾¼ã‚‚ã†ã¨ã™ã‚‹é ˜åŸŸã‚’æ¶ˆå»
+	//ãƒ»å¿…è¦æœ€å°é™ã‚’æŒ‡å®šã™ã‚Œã°ã‚ˆã„ãŒã€ä¾‹ã¨ã—ã¦64KBãƒ–ãƒ­ãƒƒã‚¯ã§æŒ‡å®šã—ã¦ã„ã‚‹ã€‚
 	FMEM_EraceBlock64k(0);
 
-	//‘‚«‚İ
+	//æ›¸ãè¾¼ã¿
 	uint32_t addr = 0x000000UL;
 	FMEM_WritePages(addr, buf, BUFSIZE);
 
-	//“Ç‚İo‚µ
+	//èª­ã¿å‡ºã—
 	FMEM_ReadBytes(addr, buf, BUFSIZE);
 	//LCD_DrawImage(x, y, w, h, buf);
 
